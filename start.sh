@@ -6,14 +6,47 @@ echo "Starting aiohttp web application..."
 if ! command -v pipenv &> /dev/null; then
     echo "pipenv is not installed. Installing pipenv..."
     
+    # Check if pip is available, install if not
+    if ! command -v pip3 &> /dev/null && ! command -v pip &> /dev/null; then
+        echo "pip is not installed. Installing pip..."
+        
+        # Try to install pip using package manager
+        if command -v apt-get &> /dev/null; then
+            echo "Installing python3-pip using apt-get..."
+            sudo apt-get update && sudo apt-get install -y python3-pip
+        elif command -v yum &> /dev/null; then
+            echo "Installing python3-pip using yum..."
+            sudo yum install -y python3-pip
+        elif command -v dnf &> /dev/null; then
+            echo "Installing python3-pip using dnf..."
+            sudo dnf install -y python3-pip
+        elif command -v pacman &> /dev/null; then
+            echo "Installing python-pip using pacman..."
+            sudo pacman -S python-pip
+        else
+            echo "Error: Unable to install pip automatically."
+            echo "Please install pip manually for your distribution:"
+            echo "  Ubuntu/Debian: sudo apt-get install python3-pip"
+            echo "  CentOS/RHEL: sudo yum install python3-pip"
+            echo "  Fedora: sudo dnf install python3-pip"
+            echo "  Arch: sudo pacman -S python-pip"
+            exit 1
+        fi
+        
+        # Verify pip installation
+        if ! command -v pip3 &> /dev/null && ! command -v pip &> /dev/null; then
+            echo "Error: Failed to install pip. Please install it manually."
+            exit 1
+        fi
+        
+        echo "pip installed successfully!"
+    fi
+    
     # Try different methods to install pipenv
     if command -v pip3 &> /dev/null; then
         pip3 install --user pipenv
     elif command -v pip &> /dev/null; then
         pip install --user pipenv
-    else
-        echo "Error: Neither pip nor pip3 is available. Please install pip first."
-        exit 1
     fi
     
     # Add user bin to PATH if pipenv is still not found
