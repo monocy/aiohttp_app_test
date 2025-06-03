@@ -42,11 +42,14 @@ if ! command -v pipenv &> /dev/null; then
         echo "pip installed successfully!"
     fi
     
-    # Try different methods to install pipenv
+    # Try different methods to install pipenv (handle PEP 668)
+    echo "Installing pipenv..."
     if command -v pip3 &> /dev/null; then
-        pip3 install --user pipenv
+        # Try --user first, then --break-system-packages if needed
+        pip3 install --user pipenv || pip3 install --user pipenv --break-system-packages
     elif command -v pip &> /dev/null; then
-        pip install --user pipenv
+        # Try --user first, then --break-system-packages if needed
+        pip install --user pipenv || pip install --user pipenv --break-system-packages
     fi
     
     # Add user bin to PATH if pipenv is still not found
