@@ -143,6 +143,13 @@ echo "Using Python: $PYTHON_VERSION (via pyenv)"
 
 # Install dependencies using Poetry
 echo "Installing dependencies with Poetry..."
+
+# Check if lock file needs to be updated
+if ! poetry check --lock &> /dev/null; then
+    echo "Updating poetry.lock file..."
+    poetry lock --no-update
+fi
+
 poetry install
 
 if [ $? -ne 0 ]; then
