@@ -1,6 +1,6 @@
-# Aiohttp Web Application
+# Aiohttp + React Web Application
 
-WindowsとUbuntuの両方で動作するaiohttpを使ったシンプルなWebアプリケーションです。
+WindowsとUbuntuの両方で動作するaiohttp + Reactを使ったモダンなWebアプリケーションです。
 
 ## 必要な環境
 
@@ -57,26 +57,38 @@ poetry run python start.py
 ## アクセス
 
 アプリケーションが起動したら、ブラウザで以下のURLにアクセスしてください:
-http://localhost:8080
 
-"Hello World!" が表示されます。
+- **Reactアプリケーション**: http://localhost:8080
+- **API エンドポイント**: http://localhost:8080/api/hello
+
+React製のモダンなUIが表示され、「API呼び出し」ボタンでPython APIとの連携が確認できます。
 
 ## 停止方法
 
 ターミナルで `Ctrl+C` を押してサーバーを停止します。
 
-## Poetry + pyenvの利点
+## 技術スタック
 
-### Poetry
-- **依存関係の管理**: `pyproject.toml`で依存関係を明確に管理
-- **仮想環境の自動作成**: Poetryが自動的に仮想環境を作成・管理
-- **ロックファイル**: `poetry.lock`で正確なバージョンを固定
-- **PEP 668対応**: システムパッケージを保護しながら安全にパッケージ管理
+### フロントエンド
+- **React 18**: モダンなUIライブラリ
+- **Babel**: JSXのトランスパイル
+- **ES6+**: 最新のJavaScript機能
 
-### pyenv
-- **Pythonバージョン管理**: プロジェクトごとに異なるPythonバージョンを使用可能
-- **複数バージョン共存**: システムPythonに影響せずに複数バージョンを管理
-- **自動切り替え**: `.python-version`ファイルでプロジェクトのPythonバージョンを自動選択
+### バックエンド
+- **aiohttp**: 非同期Pythonウェブフレームワーク
+- **Python 3.11**: 最新のPython機能
+- **静的ファイル配信**: Reactアプリの配信
+
+### 開発環境管理
+- **Poetry**: 依存関係管理とパッケージングツール
+  - `pyproject.toml`での依存関係管理
+  - 仮想環境の自動作成・管理
+  - `poetry.lock`での正確なバージョン固定
+  - PEP 668対応
+- **pyenv**: Pythonバージョン管理
+  - プロジェクトごとの異なるPythonバージョン使用
+  - システムPythonに影響しない複数バージョン共存
+  - `.python-version`でのプロジェクト自動切り替え
 
 ## 注意事項
 
