@@ -16,8 +16,7 @@ git clone https://github.com/monocy/aiohttp_app_test.git
 cd aiohttp_app_test
 
 # 実行権限を付与して起動（pyenv、Poetry、Python 3.11が自動でインストールされます）
-chmod +x start.sh
-./start.sh
+chmod +x start.sh && ./start.sh
 ```
 
 ## セットアップ

@@ -67,6 +67,14 @@ fi
 # Always add Poetry to PATH
 export PATH="$HOME/.local/bin:$PATH"
 
+# Initialize pyenv if it exists
+if [ -d "$HOME/.pyenv" ]; then
+    export PYENV_ROOT="$HOME/.pyenv"
+    export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)" 2>/dev/null
+fi
+
 # Check if pyenv is installed, install if not found
 if ! command -v pyenv &> /dev/null; then
     echo "pyenv is not installed. Installing pyenv..."
@@ -79,13 +87,15 @@ if ! command -v pyenv &> /dev/null; then
         export PYENV_ROOT="$HOME/.pyenv"
         export PATH="$PYENV_ROOT/bin:$PATH"
         eval "$(pyenv init -)"
-        eval "$(pyenv virtualenv-init -)"
+        eval "$(pyenv virtualenv-init -)" 2>/dev/null
         
-        # Add to shell profile for persistence
-        echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
-        echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
-        echo 'eval "$(pyenv init -)"' >> ~/.bashrc
-        echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
+        # Add to shell profile for persistence if not already added
+        if ! grep -q "PYENV_ROOT" ~/.bashrc; then
+            echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
+            echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
+            echo 'eval "$(pyenv init -)"' >> ~/.bashrc
+            echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
+        fi
         
         if ! command -v pyenv &> /dev/null; then
             echo "Error: pyenv installation failed. Please install it manually:"
@@ -99,12 +109,6 @@ if ! command -v pyenv &> /dev/null; then
         echo "Error: curl is not available. Please install curl first."
         exit 1
     fi
-else
-    # Initialize pyenv if already installed
-    export PYENV_ROOT="$HOME/.pyenv"
-    export PATH="$PYENV_ROOT/bin:$PATH"
-    eval "$(pyenv init -)"
-    eval "$(pyenv virtualenv-init -)"
 fi
 
 # Check if Python 3.11 is available via pyenv, install if not
