@@ -49,3 +49,6 @@ Thumbs.db
 # Task files
 tasks.md
 tasks_completed.md
+
+# pyenv
+.python-version

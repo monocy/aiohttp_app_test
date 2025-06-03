@@ -4,8 +4,9 @@ WindowsとUbuntuの両方で動作するaiohttpを使ったシンプルなWebア
 
 ## 必要な環境
 
-- Python 3.8以上
+- Python 3.11（pyenvで自動管理）
 - Poetry（依存関係管理ツール）
+- pyenv（Pythonバージョン管理）
 
 ## クイックスタート（Ubuntu/Linux）
 
@@ -14,7 +15,7 @@ WindowsとUbuntuの両方で動作するaiohttpを使ったシンプルなWebア
 git clone https://github.com/monocy/aiohttp_app_test.git
 cd aiohttp_app_test
 
-# 実行権限を付与して起動（PoetryとPoetryは自動でインストールされます）
+# 実行権限を付与して起動（pyenv、Poetry、Python 3.11が自動でインストールされます）
 chmod +x start.sh
 ./start.sh
 ```
@@ -64,15 +65,21 @@ http://localhost:8080
 
 ターミナルで `Ctrl+C` を押してサーバーを停止します。
 
-## Poetryの利点
+## Poetry + pyenvの利点
 
+### Poetry
 - **依存関係の管理**: `pyproject.toml`で依存関係を明確に管理
 - **仮想環境の自動作成**: Poetryが自動的に仮想環境を作成・管理
 - **ロックファイル**: `poetry.lock`で正確なバージョンを固定
 - **PEP 668対応**: システムパッケージを保護しながら安全にパッケージ管理
 
+### pyenv
+- **Pythonバージョン管理**: プロジェクトごとに異なるPythonバージョンを使用可能
+- **複数バージョン共存**: システムPythonに影響せずに複数バージョンを管理
+- **自動切り替え**: `.python-version`ファイルでプロジェクトのPythonバージョンを自動選択
+
 ## 注意事項
 
-- Ubuntu環境では、curlとPython 3.8以上のインストールが必要です
-- 初回実行時はPoetryと依存関係のインストールのため時間がかかる場合があります
-- PipenvのPipfileとPipfile.lockは削除されています（Poetryに移行）
+- Ubuntu環境では、curlとビルドツールのインストールが必要です
+- 初回実行時はpyenv、Poetry、Python 3.11、依存関係のインストールのため時間がかかる場合があります
+- PipenvのPipfileとPipfile.lockは削除されています（Poetry + pyenvに移行）

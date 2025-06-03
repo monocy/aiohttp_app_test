@@ -67,18 +67,79 @@ fi
 # Always add Poetry to PATH
 export PATH="$HOME/.local/bin:$PATH"
 
-# Check if Python is available
-PYTHON_CMD=""
-if command -v python3 &> /dev/null; then
-    PYTHON_CMD="python3"
-elif command -v python &> /dev/null; then
-    PYTHON_CMD="python"
+# Check if pyenv is installed, install if not found
+if ! command -v pyenv &> /dev/null; then
+    echo "pyenv is not installed. Installing pyenv..."
+    
+    # Install pyenv using the official installer
+    if command -v curl &> /dev/null; then
+        curl https://pyenv.run | bash
+        
+        # Add pyenv to PATH and initialize
+        export PYENV_ROOT="$HOME/.pyenv"
+        export PATH="$PYENV_ROOT/bin:$PATH"
+        eval "$(pyenv init -)"
+        eval "$(pyenv virtualenv-init -)"
+        
+        # Add to shell profile for persistence
+        echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
+        echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
+        echo 'eval "$(pyenv init -)"' >> ~/.bashrc
+        echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
+        
+        if ! command -v pyenv &> /dev/null; then
+            echo "Error: pyenv installation failed. Please install it manually:"
+            echo "  curl https://pyenv.run | bash"
+            echo "  Or visit: https://github.com/pyenv/pyenv#installation"
+            exit 1
+        fi
+        
+        echo "pyenv installed successfully!"
+    else
+        echo "Error: curl is not available. Please install curl first."
+        exit 1
+    fi
 else
-    echo "Error: No Python interpreter found. Please install Python 3."
-    exit 1
+    # Initialize pyenv if already installed
+    export PYENV_ROOT="$HOME/.pyenv"
+    export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
 fi
 
-echo "Using Python: $PYTHON_CMD"
+# Check if Python 3.11 is available via pyenv, install if not
+PYTHON_VERSION="3.11.9"
+if ! pyenv versions | grep -q "$PYTHON_VERSION"; then
+    echo "Python $PYTHON_VERSION is not installed via pyenv. Installing..."
+    
+    # Install build dependencies for Ubuntu/Debian
+    if command -v apt-get &> /dev/null; then
+        echo "Installing Python build dependencies..."
+        sudo apt-get update
+        sudo apt-get install -y make build-essential libssl-dev zlib1g-dev \
+        libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
+        libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev \
+        libffi-dev liblzma-dev
+    fi
+    
+    pyenv install $PYTHON_VERSION
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to install Python $PYTHON_VERSION via pyenv"
+        echo "Trying to use available Python version..."
+        AVAILABLE_VERSION=$(pyenv versions --bare | grep "^3\." | head -1)
+        if [ -n "$AVAILABLE_VERSION" ]; then
+            PYTHON_VERSION=$AVAILABLE_VERSION
+            echo "Using available Python version: $PYTHON_VERSION"
+        else
+            echo "Error: No Python 3.x version available in pyenv"
+            exit 1
+        fi
+    fi
+fi
+
+# Set the Python version for this project
+pyenv local $PYTHON_VERSION
+echo "Using Python: $PYTHON_VERSION (via pyenv)"
 
 # Install dependencies using Poetry
 echo "Installing dependencies with Poetry..."
