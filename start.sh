@@ -2,11 +2,32 @@
 
 echo "Starting aiohttp web application..."
 
-# Check if pipenv is installed
+# Check if pipenv is installed, install if not found
 if ! command -v pipenv &> /dev/null; then
-    echo "Error: pipenv is not installed. Please install pipenv first:"
-    echo "  pip install pipenv"
-    exit 1
+    echo "pipenv is not installed. Installing pipenv..."
+    
+    # Try different methods to install pipenv
+    if command -v pip3 &> /dev/null; then
+        pip3 install --user pipenv
+    elif command -v pip &> /dev/null; then
+        pip install --user pipenv
+    else
+        echo "Error: Neither pip nor pip3 is available. Please install pip first."
+        exit 1
+    fi
+    
+    # Add user bin to PATH if pipenv is still not found
+    if ! command -v pipenv &> /dev/null; then
+        export PATH="$HOME/.local/bin:$PATH"
+        if ! command -v pipenv &> /dev/null; then
+            echo "Error: Failed to install pipenv. Please install it manually:"
+            echo "  pip install --user pipenv"
+            echo "  export PATH=\"\$HOME/.local/bin:\$PATH\""
+            exit 1
+        fi
+    fi
+    
+    echo "pipenv installed successfully!"
 fi
 
 # Check if Python 3.11 is available
