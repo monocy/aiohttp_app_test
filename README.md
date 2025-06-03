@@ -10,11 +10,21 @@ WindowsとUbuntuの両方で動作するaiohttp + Reactを使ったモダンなW
 
 ## クイックスタート（Ubuntu/Linux）
 
+### 方法1: デスクトップショートカット（推奨）
 ```bash
 # リポジトリをクローン
 git clone https://github.com/monocy/aiohttp_app_test.git
 cd aiohttp_app_test
 
+# デスクトップショートカットを作成
+chmod +x setup-desktop-shortcut.sh
+./setup-desktop-shortcut.sh
+```
+
+デスクトップに作成されたアイコンをダブルクリックするだけで起動できます！
+
+### 方法2: コマンドライン実行
+```bash
 # 実行権限を付与して起動（pyenv、Poetry、Python 3.11が自動でインストールされます）
 chmod +x start.sh
 ./start.sh
