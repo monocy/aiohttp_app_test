@@ -66,16 +66,37 @@ if ! command -v pipenv &> /dev/null; then
     echo "pipenv installed successfully!"
 fi
 
-# Check if Python 3.11 is available
-if ! command -v python3.11 &> /dev/null && ! command -v python3 &> /dev/null; then
-    echo "Error: Python 3.11 or Python 3 is not installed. Please install Python 3.11 first."
+# Always add user bin to PATH to ensure pipenv is available
+export PATH="$HOME/.local/bin:$PATH"
+
+# Check if Python is available
+PYTHON_CMD=""
+if command -v python3.11 &> /dev/null; then
+    PYTHON_CMD="python3.11"
+elif command -v python3 &> /dev/null; then
+    PYTHON_CMD="python3"
+elif command -v python &> /dev/null; then
+    PYTHON_CMD="python"
+else
+    echo "Error: No Python interpreter found. Please install Python 3."
     exit 1
 fi
+
+echo "Using Python: $PYTHON_CMD"
 
 # Install dependencies if Pipfile.lock doesn't exist or if virtual environment doesn't exist
 if [ ! -f "Pipfile.lock" ] || ! pipenv --venv &> /dev/null; then
     echo "Installing dependencies..."
-    pipenv install
+    
+    # Use available Python version with pipenv
+    if [ "$PYTHON_CMD" = "python3.11" ]; then
+        pipenv install --python python3.11
+    elif [ "$PYTHON_CMD" = "python3" ]; then
+        pipenv install --python python3
+    else
+        pipenv install --python python
+    fi
+    
     if [ $? -ne 0 ]; then
         echo "Error: Failed to install dependencies"
         exit 1
