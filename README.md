@@ -35,12 +35,21 @@ poetry install
 ## 実行方法
 
 ### Windows
+
+#### 方法1: PowerShell（推奨）
+```powershell
+.\start.ps1
+```
+
+#### 方法2: バッチファイル
 ```cmd
 start.bat
 ```
-または
+
+#### 方法3: 直接実行
 ```cmd
-poetry run python start.py
+pip install aiohttp requests
+python start.py
 ```
 
 ### Ubuntu/Linux
