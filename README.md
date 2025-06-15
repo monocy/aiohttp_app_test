@@ -62,9 +62,62 @@ chmod +x start.sh
 poetry run python start.py
 ```
 
+## 設定ファイル (settings.json)
+
+アプリケーションの設定は `settings.json` ファイルで管理されます:
+
+```json
+{
+  "server": {
+    "host": "localhost",
+    "port": 8080,
+    "access_log": false
+  },
+  "app": {
+    "name": "AioHTTP React App",
+    "version": "1.0.0",
+    "debug": false
+  },
+  "static": {
+    "directory": "static",
+    "url_prefix": "/static/"
+  }
+}
+```
+
+### ポート設定の変更方法
+
+#### 方法1: settings.jsonファイルを編集
+```json
+{
+  "server": {
+    "port": 3000
+  }
+}
+```
+
+#### 方法2: コマンドライン引数
+```bash
+python start.py --port 3000
+python start.py --host 0.0.0.0 --port 8888
+```
+
+#### 方法3: 環境変数
+```bash
+# Windows PowerShell
+$env:APP_PORT=3000; python start.py
+
+# Linux/macOS
+export APP_PORT=3000
+export APP_HOST=0.0.0.0
+python start.py
+```
+
+**設定の優先順位**: 環境変数 > コマンドライン引数 > settings.json > デフォルト値
+
 ## アクセス
 
-アプリケーションが起動したら、ブラウザで以下のURLにアクセスしてください:
+アプリケーションが起動したら、ブラウザで以下のURLにアクセスしてください（デフォルトポート8080の場合）:
 
 - **Reactアプリケーション**: http://localhost:8080
 - **API エンドポイント**: http://localhost:8080/api/hello
