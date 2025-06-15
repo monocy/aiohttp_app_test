@@ -9,10 +9,16 @@ import json
 import argparse
 from pathlib import Path
 from aiohttp import web
+from datetime import datetime
 
 async def api_hello(request):
     """API: Hello worldを返すハンドラー"""
     return web.Response(text='Hello from Aiohttp API!')
+
+async def api_datetime(request):
+    """API: 現在日時を返すハンドラー"""
+    current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    return web.Response(text=current_time)
 
 async def index(request):
     """React アプリケーションのindex.htmlを返す"""
@@ -80,6 +86,7 @@ async def init_app(settings):
     # ルートの設定
     app.router.add_get('/', index)  # React アプリケーション
     app.router.add_get('/api/hello', api_hello)  # API エンドポイント
+    app.router.add_get('/api/datetime', api_datetime)  # 日時API エンドポイント
     
     return app
 
@@ -143,6 +150,7 @@ def main():
     print(f"サーバー起動: http://{host}:{port}")
     print(f"React app: http://{host}:{port}")
     print(f"API endpoint: http://{host}:{port}/api/hello")
+    print(f"DateTime API: http://{host}:{port}/api/datetime")
     print()
     print("Ctrl+C でサーバーを停止")
     print("=" * 50)
